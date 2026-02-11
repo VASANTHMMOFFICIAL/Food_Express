@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Locator - FoodExpress India</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS for Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .maps-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1548013146-72479768bada?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        #indiaMap {
+            height: 500px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+        
+        .city-filter {
+            padding: 10px 20px;
+            background-color: white;
+            border: 2px solid #ff6b6b;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .city-filter:hover, .city-filter.active {
+            background-color: #ff6b6b;
+            color: white;
+        }
+        
+        .store-card {
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .store-card:hover, .store-card.active {
+            border-color: #ff6b6b;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.1);
+        }
+        
+        .store-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .state-highlight {
+            background-color: #fff5f5;
+            border-left: 5px solid #ff6b6b;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .delivery-zone {
+            background-color: #e8f6f5;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        
+        .zone-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .zone-standard {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .zone-express {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .zone-premium {
+            background-color: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .state-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .state-btn {
+            padding: 8px 16px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .state-btn:hover, .state-btn.active {
+            background-color: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+        }
+        
+        .location-search {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .location-search input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 1rem;
+        }
+        
+        .location-search button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            font-size: 1.2rem;
+        }
+        
+        .map-controls {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .store-count {
+            background-color: #ff6b6b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <!-- Maps Hero Section -->
+    <div class="maps-hero py-5">
+        <div class="container text-center py-5">
+            <h1 class="display-4 fw-bold mb-3">Find FoodExpress Stores in India</h1>
+            <p class="lead mb-4">Locate our stores across major Indian cities. Fresh groceries delivered from store to your doorstep.</p>
+            <div class="d-flex justify-content-center gap-4 flex-wrap">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-store"></i>
+                    <span>100+ Stores Nationwide</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-truck"></i>
+                    <span>2-Hour Delivery in Cities</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-clock"></i>
+                    <span>24/7 Online Orders</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container py-5">
+        <!-- India Map Section -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-map-marked-alt me-2"></i>FoodExpress Stores Across India
+                        </h4>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="indiaMap"></div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>Click on markers to see store details
+                            </small>
+                            <button class="btn btn-sm btn-outline-primary" id="reset-map">
+                                <i class="fas fa-redo me-1"></i>Reset View
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="map-controls">
+                    <h5 class="mb-3">Find Stores Near You</h5>
+                    
+                    <!-- Location Search -->
+                    <div class="location-search mb-4">
+                        <input type="text" id="locationInput" placeholder="Enter your city or pin code">
+                        <button type="button" id="searchLocation">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- State Selector -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">Select State</h6>
+                        <div class="state-selector">
+                            <button class="state-btn active" data-state="all">All India</button>
+                            <button class="state-btn" data-state="maharashtra">Maharashtra</button>
+                            <button class="state-btn" data-state="delhi">Delhi NCR</button>
+                            <button class="state-btn" data-state="karnataka">Karnataka</button>
+                            <button class="state-btn" data-state="tamilnadu">Tamil Nadu</button>
+                            <button class="state-btn" data-state="telangana">Telangana</button>
+                        </div>
+                    </div>
+                    
+                    <!-- City Filter -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">Major Cities</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            <div class="city-filter active" data-city="all">
+                                All Cities
+                            </div>
+                            <div class="city-filter" data-city="mumbai">
+                                <i class="fas fa-city"></i> Mumbai
+                            </div>
+                            <div class="city-filter" data-city="delhi">
+                                <i class="fas fa-city"></i> Delhi
+                            </div>
+                            <div class="city-filter" data-city="bangalore">
+                                <i class="fas fa-city"></i> Bangalore
+                            </div>
+                            <div class="city-filter" data-city="chennai">
+                                <i class="fas fa-city"></i> Chennai
+                            </div>
+                            <div class="city-filter" data-city="hyderabad">
+                                <i class="fas fa-city"></i> Hyderabad
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Store Count -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Stores Found:</span>
+                        <div class="store-count" id="storeCount">45</div>
+                    </div>
+                </div>
+                
+                <!-- Delivery Zones -->
+                <div class="card shadow mt-4">
+                    <div class="card-body">
+                        <h5 class="mb-3">Delivery Zones</h5>
+                        <div class="delivery-zone">
+                            <h6 class="mb-2">Available Services</h6>
+                            <div class="mb-2">
+                                <span class="zone-badge zone-standard">
+                                    <i class="fas fa-truck"></i> Standard (4-6 hours)
+                                </span>
+                                <span class="zone-badge zone-express">
+                                    <i class="fas fa-bolt"></i> Express (2 hours)
+                                </span>
+                                <span class="zone-badge zone-premium">
+                                    <i class="fas fa-crown"></i> Premium (1 hour)
+                                </span>
+                            </div>
+                            <p class="small text-muted mb-0">Delivery times vary by location. Check store details for specific delivery options.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- State Highlights -->
+        <div class="state-highlight">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h5 class="text-primary mb-2">🚀 Now Serving 15+ Indian States!</h5>
+                    <p class="mb-0">FoodExpress has expanded to cover major metropolitan areas and tier-2 cities across India. We're continuously adding new locations to serve you better.</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#expansionModal">
+                        <i class="fas fa-expand-arrows-alt me-2"></i>View Expansion Plans
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Store Listings -->
+        <div class="row g-4" id="storeListings">
+            <div class="col-12">
+                <h3 class="mb-4">Our Stores in Major Cities</h3>
+            </div>
+            
+            <!-- Stores will be loaded via JavaScript -->
+        </div>
+        
+        <!-- Coming Soon Cities -->
+        <div class="card shadow mt-5">
+            <div class="card-header bg-light">
+                <h4 class="mb-0">
+                    <i class="fas fa-map-pin me-2"></i>Coming Soon to These Cities
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3 col-6">
+                        <div class="text-center p-3 border rounded">
+                            <i class="fas fa-city fa-2x text-primary mb-2"></i>
+                            <h6>Ahmedabad</h6>
+                            <small class="text-muted">Launching Q2 2024</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="text-center p-3 border rounded">
+                            <i class="fas fa-city fa-2x text-primary mb-2"></i>
+                            <h6>Pune</h6>
+                            <small class="text-muted">Launching Q1 2024</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="text-center p-3 border rounded">
+                            <i class="fas fa-city fa-2x text-primary mb-2"></i>
+                            <h6>Kolkata</h6>
+                            <small class="text-muted">Launching Q3 2024</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="text-center p-3 border rounded">
+                            <i class="fas fa-city fa-2x text-primary mb-2"></i>
+                            <h6>Jaipur</h6>
+                            <small class="text-muted">Launching Q2 2024</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Store Features -->
+        <div class="row g-4 mt-4">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-leaf fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">Freshness Guaranteed</h5>
+                        <p class="card-text text-muted">All our stores maintain strict quality control for fresh produce and perishables.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Extended Hours</h5>
+                        <p class="card-text text-muted">Most stores open from 6 AM to 11 PM. Select locations operate 24/7.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-rupee-sign fa-3x text-warning mb-3"></i>
+                        <h5 class="card-title">Local Pricing</h5>
+                        <p class="card-text text-muted">Competitive prices tailored to local markets across different Indian cities.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="bg-light py-5 mt-5">
+        <div class="container">
+            <h3 class="text-center mb-4">Frequently Asked Questions</h3>
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            What are the delivery charges for my area?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Delivery charges vary by location and order value. Most metro cities have free delivery on orders above ₹499. Tier-2 cities may have different pricing. Check the store details for specific delivery charges.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Do you deliver to my pin code?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            We deliver to over 10,000 pin codes across India. Enter your pin code in the search bar above to check if we deliver to your area. We're continuously expanding our delivery network.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            Can I pick up my order from the store?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes! Most of our stores offer click-and-collect services. You can place your order online and pick it up from your nearest store. This option is free and usually available within 30 minutes of ordering.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <!-- Expansion Plans Modal -->
+    <div class="modal fade" id="expansionModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">FoodExpress India Expansion Plans</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="mb-3">2024 Expansion</h6>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Q1: Pune, Lucknow</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Q2: Ahmedabad, Jaipur</li>
+                                <li class="mb-2"><i class="fas fa-clock text-warning me-2"></i>Q3: Kolkata, Chandigarh</li>
+                                <li class="mb-2"><i class="fas fa-clock text-warning me-2"></i>Q4: Kochi, Bhopal</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="mb-3">2025 Roadmap</h6>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-map-marker text-primary me-2"></i>North: Dehradun, Jammu</li>
+                                <li class="mb-2"><i class="fas fa-map-marker text-primary me-2"></i>South: Coimbatore, Vizag</li>
+                                <li class="mb-2"><i class="fas fa-map-marker text-primary me-2"></i>East: Guwahati, Bhubaneswar</li>
+                                <li class="mb-2"><i class="fas fa-map-marker text-primary me-2"></i>West: Goa, Nagpur</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Want FoodExpress in your city? <a href="contact.html" class="alert-link">Request expansion</a> to your location.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Store Details Modal -->
+    <div class="modal fade" id="storeModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="storeModalTitle">Store Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="storeModalBody">
+                    <!-- Store details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Store data for India
+        const indiaStores = [
+            {
+                id: 1,
+                name: "FoodExpress Mumbai - Bandra",
+                address: "Linking Road, Bandra West, Mumbai, Maharashtra 400050",
+                phone: "+91 22 2645 6789",
+                hours: "6:00 AM - 11:00 PM",
+                coordinates: [19.0596, 72.8295],
+                city: "mumbai",
+                state: "maharashtra",
+                features: ["24/7 Online", "Express Delivery", "Fresh Produce", "Parking"],
+                deliveryZones: ["standard", "express", "premium"],
+                manager: "Rajesh Kumar",
+                rating: 4.8,
+                pinCodes: ["400050", "400051", "400052"]
+            },
+            {
+                id: 2,
+                name: "FoodExpress Delhi - Connaught Place",
+                address: "B Block, Connaught Place, New Delhi 110001",
+                phone: "+91 11 2345 6789",
+                hours: "7:00 AM - 11:00 PM",
+                coordinates: [28.6304, 77.2177],
+                city: "delhi",
+                state: "delhi",
+                features: ["24/7 Store", "Express Delivery", "Organic Section", "Café"],
+                deliveryZones: ["standard", "express", "premium"],
+                manager: "Priya Sharma",
+                rating: 4.7,
+                pinCodes: ["110001", "110002", "110003"]
+            },
+            {
+                id: 3,
+                name: "FoodExpress Bangalore - Koramangala",
+                address: "80 Feet Road, Koramangala, Bengaluru, Karnataka 560034",
+                phone: "+91 80 2678 9012",
+                hours: "6:00 AM - 10:30 PM",
+                coordinates: [12.9352, 77.6245],
+                city: "bangalore",
+                state: "karnataka",
+                features: ["Tech Pickup", "Express Delivery", "Fresh Bakery", "Parking"],
+                deliveryZones: ["standard", "express"],
+                manager: "Arun Patel",
+                rating: 4.9,
+                pinCodes: ["560034", "560035", "560095"]
+            },
+            {
+                id: 4,
+                name: "FoodExpress Chennai - T Nagar",
+                address: "North Usman Road, T Nagar, Chennai, Tamil Nadu 600017",
+                phone: "+91 44 2345 6789",
+                hours: "6:30 AM - 10:00 PM",
+                coordinates: [13.0474, 80.2359],
+                city: "chennai",
+                state: "tamilnadu",
+                features: ["Fresh Seafood", "Express Delivery", "Local Specialties"],
+                deliveryZones: ["standard", "express"],
+                manager: "Deepa Rajan",
+                rating: 4.6,
+                pinCodes: ["600017", "600018", "600093"]
+            },
+            {
+                id: 5,
+                name: "FoodExpress Hyderabad - Banjara Hills",
+                address: "Road No. 12, Banjara Hills, Hyderabad, Telangana 500034",
+                phone: "+91 40 2789 0123",
+                hours: "6:00 AM - 11:00 PM",
+                coordinates: [17.4254, 78.4495],
+                city: "hyderabad",
+                state: "telangana",
+                features: ["24/7 Online", "Express Delivery", "Fresh Meat", "Parking"],
+                deliveryZones: ["standard", "express", "premium"],
+                manager: "Vikram Reddy",
+                rating: 4.7,
+                pinCodes: ["500034", "500082", "500033"]
+            },
+            {
+                id: 6,
+                name: "FoodExpress Mumbai - Andheri",
+                address: "SV Road, Andheri West, Mumbai, Maharashtra 400058",
+                phone: "+91 22 2678 3456",
+                hours: "6:00 AM - 11:30 PM",
+                coordinates: [19.1364, 72.8296],
+                city: "mumbai",
+                state: "maharashtra",
+                features: ["24/7 Store", "Express Delivery", "Fresh Juice Bar"],
+                deliveryZones: ["standard", "express", "premium"],
+                manager: "Neha Verma",
+                rating: 4.5,
+                pinCodes: ["400058", "400053", "400061"]
+            },
+            {
+                id: 7,
+                name: "FoodExpress Delhi - Saket",
+                address: "Press Enclave Road, Saket, New Delhi 110017",
+                phone: "+91 11 2678 9012",
+                hours: "7:00 AM - 10:30 PM",
+                coordinates: [28.5246, 77.2066],
+                city: "delhi",
+                state: "delhi",
+                features: ["Organic Section", "Express Delivery", "Kids Play Area"],
+                deliveryZones: ["standard", "express"],
+                manager: "Rohit Malhotra",
+                rating: 4.8,
+                pinCodes: ["110017", "110016", "110062"]
+            },
+            {
+                id: 8,
+                name: "FoodExpress Bangalore - Indiranagar",
+                address: "100 Feet Road, Indiranagar, Bengaluru, Karnataka 560038",
+                phone: "+91 80 2345 6789",
+                hours: "6:00 AM - 11:00 PM",
+                coordinates: [12.9784, 77.6408],
+                city: "bangalore",
+                state: "karnataka",
+                features: ["Gourmet Section", "Express Delivery", "Wine Shop", "Parking"],
+                deliveryZones: ["standard", "express", "premium"],
+                manager: "Anjali Nair",
+                rating: 4.9,
+                pinCodes: ["560038", "560008", "560071"]
+            }
+        ];
+
+        // Initialize map
+        let map;
+        let markers = [];
+        
+        function initMap() {
+            // Center map on India
+            map = L.map('indiaMap').setView([20.5937, 78.9629], 5);
+            
+            // Add tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 18,
+                minZoom: 4
+            }).addTo(map);
+            
+            // Add custom markers for stores
+            addStoreMarkers(indiaStores);
+            
+            // Add click event to reset button
+            document.getElementById('reset-map').addEventListener('click', function() {
+                map.setView([20.5937, 78.9629], 5);
+                document.querySelectorAll('.city-filter, .state-btn').forEach(btn => {
+                    if (btn.dataset.city === 'all' || btn.dataset.state === 'all') {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                filterStores('all', 'all');
+            });
+        }
+        
+        // Add store markers to map
+        function addStoreMarkers(stores) {
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            stores.forEach(store => {
+                // Custom icon based on city
+                const icon = L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="background-color: #ff6b6b; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">${store.id}</div>`,
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15]
+                });
+                
+                const marker = L.marker(store.coordinates, { icon: icon })
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="min-width: 200px;">
+                            <h6 style="margin: 0 0 5px 0; color: #ff6b6b;">${store.name}</h6>
+                            <p style="margin: 0 0 5px 0; font-size: 0.9rem;">${store.address}</p>
+                            <p style="margin: 0 0 5px 0; font-size: 0.9rem;"><strong>Hours:</strong> ${store.hours}</p>
+                            <button onclick="showStoreDetails(${store.id})" style="background-color: #ff6b6b; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 0.9rem;">
+                                View Details
+                            </button>
+                        </div>
+                    `);
+                
+                markers.push(marker);
+            });
+        }
+        
+        // Show store details in modal
+        function showStoreDetails(storeId) {
+            const store = indiaStores.find(s => s.id === storeId);
+            if (!store) return;
+            
+            const modal = new bootstrap.Modal(document.getElementById('storeModal'));
+            const modalTitle = document.getElementById('storeModalTitle');
+            const modalBody = document.getElementById('storeModalBody');
+            
+            modalTitle.textContent = store.name;
+            
+            modalBody.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Store Information</h6>
+                        <p class="mb-2"><strong>Address:</strong> ${store.address}</p>
+                        <p class="mb-2"><strong>Phone:</strong> ${store.phone}</p>
+                        <p class="mb-2"><strong>Hours:</strong> ${store.hours}</p>
+                        <p class="mb-2"><strong>Manager:</strong> ${store.manager}</p>
+                        <p class="mb-2"><strong>Rating:</strong> ${'★'.repeat(Math.floor(store.rating))}${store.rating.toFixed(1)}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Services & Features</h6>
+                        ${store.features.map(feature => `
+                            <div class="store-feature mb-1">
+                                <i class="fas fa-check text-success"></i>
+                                <span>${feature}</span>
+                            </div>
+                        `).join('')}
+                        
+                        <h6 class="mt-3">Delivery Zones</h6>
+                        <div class="d-flex flex-wrap gap-1">
+                            ${store.deliveryZones.map(zone => `
+                                <span class="zone-badge zone-${zone}">
+                                    <i class="fas fa-${zone === 'premium' ? 'crown' : zone === 'express' ? 'bolt' : 'truck'}"></i>
+                                    ${zone.charAt(0).toUpperCase() + zone.slice(1)}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <h6>Delivery Pin Codes</h6>
+                    <div class="d-flex flex-wrap gap-1">
+                        ${store.pinCodes.map(pin => `<span class="badge bg-light text-dark">${pin}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="mt-3 d-grid gap-2">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-directions me-2"></i>Get Directions
+                    </button>
+                    <button class="btn btn-outline-primary" onclick="window.location.href='contact.html'">
+                        <i class="fas fa-headset me-2"></i>Contact Store
+                    </button>
+                </div>
+            `;
+            
+            modal.show();
+        }
+        
+        // Filter stores by city and state
+        function filterStores(city = 'all', state = 'all') {
+            let filteredStores = indiaStores;
+            
+            if (city !== 'all') {
+                filteredStores = filteredStores.filter(store => store.city === city);
+            }
+            
+            if (state !== 'all') {
+                filteredStores = filteredStores.filter(store => store.state === state);
+            }
+            
+            // Update store count
+            document.getElementById('storeCount').textContent = filteredStores.length;
+            
+            // Update map markers
+            addStoreMarkers(filteredStores);
+            
+            // Update store listings
+            loadStoreListings(filteredStores);
+            
+            // Zoom map to show filtered stores
+            if (filteredStores.length > 0) {
+                const bounds = L.latLngBounds(filteredStores.map(store => store.coordinates));
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+        }
+        
+        // Load store listings
+        function loadStoreListings(stores) {
+            const storeListings = document.getElementById('storeListings');
+            
+            if (stores.length === 0) {
+                storeListings.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="fas fa-store fa-3x text-muted mb-3"></i>
+                        <h4>No stores found in this area</h4>
+                        <p class="text-muted">Try selecting a different city or check our coming soon cities.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            storeListings.innerHTML = stores.map(store => `
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="store-card card h-100" onclick="showStoreDetails(${store.id})">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h5 class="card-title mb-1">${store.name.split('-')[1].trim()}</h5>
+                                    <h6 class="card-subtitle text-muted">${store.name.split('-')[0].trim()}</h6>
+                                </div>
+                                <div class="text-warning">
+                                    ${'★'.repeat(Math.floor(store.rating))}${'☆'.repeat(5 - Math.floor(store.rating))}
+                                    <small class="text-muted">(${store.rating})</small>
+                                </div>
+                            </div>
+                            
+                            <p class="card-text text-muted small mb-3">
+                                <i class="fas fa-map-marker-alt me-1"></i>${store.address.split(',')[0]}...
+                            </p>
+                            
+                            <div class="mb-3">
+                                <h6 class="small mb-2">Features:</h6>
+                                <div class="d-flex flex-wrap gap-1">
+                                    ${store.features.slice(0, 3).map(feature => `
+                                        <span class="badge bg-light text-dark">${feature}</span>
+                                    `).join('')}
+                                    ${store.features.length > 3 ? '<span class="badge bg-light text-dark">+ more</span>' : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>${store.hours.split('-')[0].trim()}
+                                    </small>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    Details <i class="fas fa-chevron-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // DOM Content Loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNavbar();
+            loadFooter();
+            updateCartCount();
+            initMap();
+            loadStoreListings(indiaStores);
+            setupFilters();
+        });
+        
+        // Setup filters
+        function setupFilters() {
+            // City filters
+            document.querySelectorAll('.city-filter').forEach(filter => {
+                filter.addEventListener('click', function() {
+                    // Remove active class from all city filters
+                    document.querySelectorAll('.city-filter').forEach(f => f.classList.remove('active'));
+                    
+                    // Add active class to clicked filter
+                    this.classList.add('active');
+                    
+                    // Get city value
+                    const cityValue = this.dataset.city;
+                    
+                    // Get current state
+                    const activeState = document.querySelector('.state-btn.active');
+                    const stateValue = activeState ? activeState.dataset.state : 'all';
+                    
+                    // Filter stores
+                    filterStores(cityValue, stateValue);
+                });
+            });
+            
+            // State filters
+            document.querySelectorAll('.state-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all state buttons
+                    document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get state value
+                    const stateValue = this.dataset.state;
+                    
+                    // Get current city
+                    const activeCity = document.querySelector('.city-filter.active');
+                    const cityValue = activeCity ? activeCity.dataset.city : 'all';
+                    
+                    // Filter stores
+                    filterStores(cityValue, stateValue);
+                });
+            });
+            
+            // Location search
+            document.getElementById('searchLocation').addEventListener('click', function() {
+                const locationInput = document.getElementById('locationInput').value.toLowerCase();
+                if (!locationInput.trim()) return;
+                
+                // Simple city matching
+                const cities = ['mumbai', 'delhi', 'bangalore', 'chennai', 'hyderabad', 'pune', 'kolkata', 'ahmedabad'];
+                const matchedCity = cities.find(city => locationInput.includes(city));
+                
+                if (matchedCity) {
+                    // Activate city filter
+                    document.querySelectorAll('.city-filter').forEach(f => {
+                        f.classList.remove('active');
+                        if (f.dataset.city === matchedCity) {
+                            f.classList.add('active');
+                        }
+                    });
+                    
+                    // Filter stores
+                    const activeState = document.querySelector('.state-btn.active');
+                    const stateValue = activeState ? activeState.dataset.state : 'all';
+                    filterStores(matchedCity, stateValue);
+                    
+                    // Show notification
+                    alert(`Showing stores in ${matchedCity.charAt(0).toUpperCase() + matchedCity.slice(1)}`);
+                } else {
+                    alert('City not found. Please try Mumbai, Delhi, Bangalore, Chennai, or Hyderabad.');
+                }
+            });
+            
+            // Enter key in search
+            document.getElementById('locationInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('searchLocation').click();
+                }
+            });
+            
+            // Expansion modal
+            document.querySelector('[data-bs-target="#expansionModal"]').addEventListener('click', function() {
+                // Modal will be shown by Bootstrap
+            });
+        }
+    </script>
+</body>
+</html>

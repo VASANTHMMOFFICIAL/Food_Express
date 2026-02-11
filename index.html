@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodExpress India - Online Grocery Shopping & Food Delivery</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Indian Theme Styles */
+        :root {
+            --indian-saffron: #FF9933;
+            --indian-white: #FFFFFF;
+            --indian-green: #138808;
+            --indian-blue: #000080;
+            --indian-red: #E53E3E;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e9 100%);
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--indian-saffron) 33%, var(--indian-white) 33%, var(--indian-white) 66%, var(--indian-green) 66%);
+        }
+        
+        .hero-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--indian-saffron), var(--indian-green));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+        
+        .indian-price {
+            color: var(--indian-green);
+            font-weight: 600;
+        }
+        
+        .indian-price::before {
+            content: '₹';
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .category-card {
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .category-card:hover {
+            border-color: var(--indian-saffron);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 153, 51, 0.1);
+        }
+        
+        .category-icon {
+            font-size: 2.5rem;
+            color: var(--indian-saffron);
+            margin-bottom: 1rem;
+        }
+        
+        .indian-tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: var(--indian-green);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+        
+        .veg-tag {
+            background-color: var(--indian-green);
+        }
+        
+        .nonveg-tag {
+            background-color: var(--indian-red);
+        }
+        
+        .product-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--indian-saffron);
+        }
+        
+        .product-image {
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+        
+        .indian-offer {
+            background: linear-gradient(135deg, var(--indian-saffron), var(--indian-red));
+            color: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .indian-features {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 153, 51, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--indian-saffron);
+            font-size: 1.5rem;
+            margin: 0 auto 10px;
+        }
+        
+        .cta {
+            background: linear-gradient(135deg, var(--indian-saffron) 0%, #ff8c00 100%);
+            color: white;
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--indian-green) 50%, var(--indian-blue) 50%);
+        }
+        
+        .indian-cities {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .city-badge {
+            display: inline-block;
+            background-color: #f0f7ff;
+            color: var(--indian-blue);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .city-badge:hover {
+            background-color: var(--indian-saffron);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .timer-unit {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 60px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timer-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--indian-green);
+        }
+        
+        .timer-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 2rem 0;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .timer {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .timer-unit {
+                min-width: 50px;
+                padding: 8px 12px;
+            }
+            
+            .timer-value {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar will be loaded dynamically -->
+    <div id="navbar-container"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container position-relative">
+            <div class="hero-badge">
+                <i class="fas fa-shipping-fast me-1"></i> Free Delivery above ₹199
+            </div>
+            
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h1 class="display-4 fw-bold mb-4 text-primary">
+                        Fresh Groceries Delivered in <span class="text-warning">90 Minutes</span>
+                    </h1>
+                    <p class="lead mb-4">
+                        Shop fresh fruits, vegetables, dairy, snacks, and more from local Indian stores. 
+                        Get express delivery in 90 minutes or schedule for later.
+                    </p>
+                    
+                    <!-- Search Bar -->
+                    <div class="mb-4">
+                        <div class="input-group input-group-lg shadow-sm">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="fas fa-map-marker-alt text-warning"></i>
+                            </span>
+                            <input type="text" class="form-control border-start-0" placeholder="Enter your delivery location in India">
+                            <button class="btn btn-warning text-white">
+                                <i class="fas fa-search me-2"></i>Find Stores
+                            </button>
+                        </div>
+                        <small class="text-muted mt-2 d-block">
+                            <i class="fas fa-check-circle text-success me-1"></i>
+                            Serving in Delhi, Mumbai, Bangalore, Hyderabad, Chennai & 20+ cities
+                        </small>
+                    </div>
+                    
+                    <!-- Features -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-3">
+                            <div class="indian-features text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <p class="small mb-0 fw-bold">90 Min Delivery</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="indian-features text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-rupee-sign"></i>
+                                </div>
+                                <p class="small mb-0 fw-bold">Lowest Price</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="indian-features text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-leaf"></i>
+                                </div>
+                                <p class="small mb-0 fw-bold">Fresh & Safe</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="indian-features text-center">
+                                <div class="feature-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <p class="small mb-0 fw-bold">Hygienic Packing</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-3">
+                        <a href="#featured" class="btn btn-warning btn-lg px-5 text-white">
+                            <i class="fas fa-shopping-bag me-2"></i>Shop Now
+                        </a>
+                        <a href="signup.html" class="btn btn-outline-warning btn-lg px-4">
+                            <i class="fas fa-user-plus me-2"></i>Sign Up
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6 position-relative">
+                    <div class="position-relative">
+                        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Fresh groceries delivery in India" 
+                             class="img-fluid rounded shadow-lg">
+                        <div class="position-absolute bottom-0 start-0 m-3">
+                            <div class="bg-white rounded-pill px-3 py-2 shadow-sm">
+                                <i class="fas fa-truck text-warning me-2"></i>
+                                <span class="fw-bold">Express Delivery</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Offer Timer -->
+                    <div class="mt-4">
+                        <div class="card border-warning">
+                            <div class="card-body text-center">
+                                <h6 class="card-title mb-3">
+                                    <i class="fas fa-clock text-warning me-2"></i>
+                                    Limited Time Offer Ends In
+                                </h6>
+                                <div class="timer">
+                                    <div class="timer-unit">
+                                        <div class="timer-value" id="hours">02</div>
+                                        <div class="timer-label">Hours</div>
+                                    </div>
+                                    <div class="timer-unit">
+                                        <div class="timer-value" id="minutes">30</div>
+                                        <div class="timer-label">Minutes</div>
+                                    </div>
+                                    <div class="timer-unit">
+                                        <div class="timer-value" id="seconds">45</div>
+                                        <div class="timer-label">Seconds</div>
+                                    </div>
+                                </div>
+                                <p class="small text-muted mb-0">Use code: <strong class="text-warning">INDIA20</strong> for 20% off</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flash Sale Section -->
+    <section class="py-4 bg-danger text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-bolt fa-2x me-3"></i>
+                        <div>
+                            <h4 class="mb-1">End of Season Sale!</h4>
+                            <p class="mb-0">Upto 60% off on groceries & daily essentials</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a href="#flash-sale" class="btn btn-light btn-lg">
+                        <i class="fas fa-fire me-2"></i>Shop Sale
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Categories -->
+    <section class="py-5" id="featured">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <div>
+                    <h2 class="fw-bold mb-2">Shop by Category</h2>
+                    <p class="text-muted">Everything you need for your kitchen</p>
+                </div>
+                <a href="categories.html" class="btn btn-link text-warning">
+                    View All <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a href="fruits-vegetables.html" class="card category-card h-100 text-decoration-none">
+                        <div class="card-body text-center p-3">
+                            <div class="category-icon">
+                                <i class="fas fa-apple-alt"></i>
+                            </div>
+                            <h6 class="mb-1">Fruits & Vegetables</h6>
+                            <p class="small text-muted mb-0">Fresh & Organic</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a href="dairy.html" class="card category-card h-100 text-decoration-none">
+                        <div class="card-body text-center p-3">
+                            <div class="category-icon">
+                                <i class="fas fa-cheese"></i>
+                            </div>
+                            <h6 class="mb-1">Dairy & Eggs</h6>
+                            <p class="small text-muted mb-0">Milk, Cheese, Butter</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a href="snacks.html" class="card category-card h-100 text-decoration-none">
+                        <div class="card-body text-center p-3">
+                            <div class="category-icon">
+                                <i class="fas fa-cookie-bite"></i>
+                            </div>
+                            <h6 class="mb-1">Snacks & Beverages</h6>
+                            <p class="small text-muted mb-0">Chips, Juices, Tea</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a href="staples.html" class="card category-card h-100 text-decoration-none">
+                        <div class="card-body text-center p-3">
+                            <div class="category-icon">
+                                <i class="fas fa-wheat-awn"></i>
+                            </div>
+                            <h6 class="mb-1">Staples</h6>
+                            <p class="small text-muted mb-0">Rice, Flour, Pulses</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a href="ready-to-eat.html" class="card category-card h-100 text-decoration-none">
+                        <div class="card-body text-center p-3">
+                            <div class="category-icon">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <h6 class="mb-1">Ready to Eat</h6>
+                            <p class="small text-muted mb-0">Instant Meals</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="col-6 col-md-4 col-lg-2">
+                    <a href="personal-care.html" class="card category-card h-100 text-decoration-none">
+                        <div class="card-body text-center p-3">
+                            <div class="category-icon">
+                                <i class="fas fa-soap"></i>
+                            </div>
+                            <h6 class="mb-1">Personal Care</h6>
+                            <p class="small text-muted mb-0">Soap, Shampoo</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flash Sale Products -->
+    <section class="bg-light py-5" id="flash-sale">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <div>
+                    <h2 class="fw-bold mb-2">
+                        <i class="fas fa-bolt text-warning me-2"></i>
+                        Flash Sale
+                    </h2>
+                    <p class="text-muted">Limited time offers on popular products</p>
+                </div>
+                <div class="text-end">
+                    <div class="badge bg-danger p-2">
+                        <i class="fas fa-clock me-1"></i>
+                        <span id="sale-timer">30:45</span> Left
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row g-4" id="flash-sale-products">
+                <!-- Flash sale products will be loaded via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5">Trending Products</h2>
+            <div class="row g-4" id="featured-products">
+                <!-- Products will be loaded via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Indian Brands Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5">Trusted Indian Brands</h2>
+            <div class="row g-4 align-items-center">
+                <div class="col-4 col-md-2">
+                    <div class="text-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Amul_logo.svg/2560px-Amul_logo.svg.png" 
+                             alt="Amul" class="img-fluid" style="height: 40px; object-fit: contain;">
+                    </div>
+                </div>
+                <div class="col-4 col-md-2">
+                    <div class="text-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/ITC_logo.svg/2560px-ITC_logo.svg.png" 
+                             alt="ITC" class="img-fluid" style="height: 40px; object-fit: contain;">
+                    </div>
+                </div>
+                <div class="col-4 col-md-2">
+                    <div class="text-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Nestle.svg/2560px-Nestle.svg.png" 
+                             alt="Nestle" class="img-fluid" style="height: 40px; object-fit: contain;">
+                    </div>
+                </div>
+                <div class="col-4 col-md-2">
+                    <div class="text-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Parle_Products_logo.svg/2560px-Parle_Products_logo.svg.png" 
+                             alt="Parle" class="img-fluid" style="height: 40px; object-fit: contain;">
+                    </div>
+                </div>
+                <div class="col-4 col-md-2">
+                    <div class="text-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Britannia_Industries_logo.svg/2560px-Britannia_Industries_logo.svg.png" 
+                             alt="Britannia" class="img-fluid" style="height: 40px; object-fit: contain;">
+                    </div>
+                </div>
+                <div class="col-4 col-md-2">
+                    <div class="text-center">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Dabur_Logo.svg/2560px-Dabur_Logo.svg.png" 
+                             alt="Dabur" class="img-fluid" style="height: 40px; object-fit: contain;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cities We Serve -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5">Serving Across India</h2>
+            <div class="indian-cities">
+                <div class="text-center mb-4">
+                    <h5 class="text-muted">Available in these cities</h5>
+                </div>
+                <div class="text-center">
+                    <span class="city-badge">Delhi NCR</span>
+                    <span class="city-badge">Mumbai</span>
+                    <span class="city-badge">Bangalore</span>
+                    <span class="city-badge">Hyderabad</span>
+                    <span class="city-badge">Chennai</span>
+                    <span class="city-badge">Kolkata</span>
+                    <span class="city-badge">Pune</span>
+                    <span class="city-badge">Ahmedabad</span>
+                    <span class="city-badge">Jaipur</span>
+                    <span class="city-badge">Lucknow</span>
+                    <span class="city-badge">Chandigarh</span>
+                    <span class="city-badge">Kochi</span>
+                    <span class="city-badge">Bhopal</span>
+                    <span class="city-badge">Indore</span>
+                    <span class="city-badge">Nagpur</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5">How FoodExpress Works</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="text-center p-4">
+                        <div class="feature-icon mb-3" style="background-color: rgba(255, 153, 51, 0.1);">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h5 class="mb-3">1. Enter Location</h5>
+                        <p class="text-muted">Enter your delivery location to see stores and products available in your area</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-center p-4">
+                        <div class="feature-icon mb-3" style="background-color: rgba(19, 136, 8, 0.1);">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h5 class="mb-3">2. Shop Products</h5>
+                        <p class="text-muted">Browse thousands of products from local stores and add to cart</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-center p-4">
+                        <div class="feature-icon mb-3" style="background-color: rgba(0, 0, 128, 0.1);">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h5 class="mb-3">3. Fast Delivery</h5>
+                        <p class="text-muted">Get your order delivered in as fast as 90 minutes at your doorstep</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta py-5">
+        <div class="container text-center position-relative">
+            <div class="hero-badge" style="top: -20px; right: auto; left: 50%; transform: translateX(-50%);">
+                <i class="fas fa-gift me-1"></i> Special Launch Offer
+            </div>
+            
+            <h2 class="display-5 fw-bold text-white mb-3">Download Our App Now!</h2>
+            <p class="lead text-white mb-4">Get ₹100 off on your first order + Additional benefits on app</p>
+            
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="#" class="btn btn-light btn-lg px-4">
+                    <i class="fab fa-google-play me-2"></i>
+                    <div class="d-flex flex-column align-items-start">
+                        <small>Get it on</small>
+                        <span class="fw-bold">Google Play</span>
+                    </div>
+                </a>
+                <a href="#" class="btn btn-light btn-lg px-4">
+                    <i class="fab fa-app-store me-2"></i>
+                    <div class="d-flex flex-column align-items-start">
+                        <small>Download on the</small>
+                        <span class="fw-bold">App Store</span>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="mt-4">
+                <p class="text-white-50 mb-2">Also available on:</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <a href="#" class="btn btn-outline-light btn-sm">
+                        <i class="fas fa-globe me-1"></i> Web
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-sm">
+                        <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UPI Payment Section -->
+    <section class="py-4 bg-success text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-rupee-sign fa-2x me-3"></i>
+                        <div>
+                            <h4 class="mb-1">Pay with UPI & Save More!</h4>
+                            <p class="mb-0">Get extra 5% cashback on PhonePe, Google Pay & Paytm UPI</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a href="cart.html" class="btn btn-light btn-lg text-success">
+                        <i class="fas fa-qrcode me-2"></i>Pay Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer will be loaded dynamically -->
+    <div id="footer-container"></div>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/919876543210" class="btn btn-success rounded-pill shadow-lg position-fixed" 
+       style="bottom: 20px; right: 20px; z-index: 1000; padding: 12px 20px;">
+        <i class="fab fa-whatsapp fa-2x"></i>
+    </a>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Indian Products Data
+        const indianProducts = [
+            {
+                id: 101,
+                name: "Fresh Alphonso Mangoes",
+                price: 499,
+                comparePrice: 699,
+                image: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "Fruits",
+                weight: "1 kg",
+                tag: "SEASONAL",
+                rating: 4.8,
+                isVeg: true,
+                brand: "Farm Fresh"
+            },
+            {
+                id: 102,
+                name: "Amul Butter",
+                price: 55,
+                comparePrice: 60,
+                image: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "Dairy",
+                weight: "100g",
+                tag: "BESTSELLER",
+                rating: 4.6,
+                isVeg: true,
+                brand: "Amul"
+            },
+            {
+                id: 103,
+                name: "Basmati Rice",
+                price: 129,
+                comparePrice: 149,
+                image: "https://images.unsplash.com/photo-1592921870789-04563d55041c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "Staples",
+                weight: "1 kg",
+                tag: "POPULAR",
+                rating: 4.7,
+                isVeg: true,
+                brand: "India Gate"
+            },
+            {
+                id: 104,
+                name: "Maggi Noodles",
+                price: 56,
+                comparePrice: 60,
+                image: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "Ready to Eat",
+                weight: "Pack of 4",
+                tag: "FAVORITE",
+                rating: 4.5,
+                isVeg: true,
+                brand: "Nestle"
+            },
+            {
+                id: 105,
+                name: "Fortune Sunflower Oil",
+                price: 189,
+                comparePrice: 210,
+                image: "https://images.unsplash.com/photo-1533050487297-09b450131914?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "Cooking Oil",
+                weight: "1L",
+                tag: "BESTSELLER",
+                rating: 4.4,
+                isVeg: true,
+                brand: "Fortune"
+            },
+            {
+                id: 106,
+                name: "Lays Potato Chips",
+                price: 40,
+                comparePrice: 45,
+                image: "https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "Snacks",
+                weight: "52g",
+                tag: "POPULAR",
+                rating: 4.3,
+                isVeg: true,
+                brand: "Lays"
+            },
+            {
+                id: 107,
+                name: "Fresh Potatoes",
+                price: 35,
+                comparePrice: 40,
+                image: "https://images.unsplash.com/photo-1518977676601-b53f82aba655?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "Vegetables",
+                weight: "1 kg",
+                tag: "DAILY",
+                rating: 4.6,
+                isVeg: true,
+                brand: "Local Farm"
+            },
+            {
+                id: 108,
+                name: "Tata Tea Gold",
+                price: 220,
+                comparePrice: 250,
+                image: "https://images.unsplash.com/photo-1570598912132-0ba1dc952b7d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                category: "Beverages",
+                weight: "500g",
+                tag: "BESTSELLER",
+                rating: 4.7,
+                isVeg: true,
+                brand: "Tata"
+            }
+        ];
+
+        // Flash Sale Products
+        const flashSaleProducts = indianProducts.slice(0, 4).map(product => ({
+            ...product,
+            discount: Math.floor((product.comparePrice - product.price) / product.comparePrice * 100)
+        }));
+
+        // Format Indian currency
+        function formatIndianRupees(amount) {
+            return '₹' + amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Get star rating HTML
+        function getStarRating(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.3 && rating % 1 <= 0.7;
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star text-warning"></i>';
+            }
+            
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt text-warning"></i>';
+            }
+            
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star text-warning"></i>';
+            }
+            
+            return stars;
+        }
+
+        // Load featured products
+        function loadFeaturedProducts() {
+            const productGrid = document.getElementById('featured-products');
+            if (productGrid) {
+                productGrid.innerHTML = indianProducts.map(product => `
+                    <div class="col-md-6 col-lg-4 col-xl-3">
+                        <div class="card product-card h-100">
+                            <div class="product-image position-relative">
+                                <img src="${product.image}" class="card-img-top" alt="${product.name}">
+                                <span class="indian-tag ${product.isVeg ? 'veg-tag' : 'nonveg-tag'}">
+                                    ${product.isVeg ? 'VEG' : 'NON-VEG'}
+                                </span>
+                                ${product.tag ? `
+                                    <div class="position-absolute top-0 end-0 m-2">
+                                        <span class="badge bg-warning">${product.tag}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="card-title">${product.name}</h6>
+                                <p class="card-text small text-muted mb-2">
+                                    <i class="fas fa-weight me-1"></i>${product.weight} • ${product.brand}
+                                </p>
+                                <div class="product-rating mb-3">
+                                    ${getStarRating(product.rating)}
+                                    <small class="text-muted ms-1">(${product.rating})</small>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                    <div>
+                                        <span class="h5 text-primary mb-0">${formatIndianRupees(product.price)}</span>
+                                        ${product.comparePrice ? `
+                                            <del class="text-muted ms-2">${formatIndianRupees(product.comparePrice)}</del>
+                                        ` : ''}
+                                    </div>
+                                    <button class="btn btn-primary btn-sm add-to-cart" 
+                                        data-id="${product.id}"
+                                        data-name="${product.name}"
+                                        data-price="${product.price}"
+                                        data-image="${product.image}">
+                                        <i class="fas fa-plus"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Load flash sale products
+        function loadFlashSaleProducts() {
+            const flashSaleGrid = document.getElementById('flash-sale-products');
+            if (flashSaleGrid) {
+                flashSaleGrid.innerHTML = flashSaleProducts.map(product => `
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card product-card h-100 border-danger">
+                            <div class="product-image position-relative">
+                                <img src="${product.image}" class="card-img-top" alt="${product.name}">
+                                <span class="indian-tag veg-tag">VEG</span>
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <span class="badge bg-danger">${product.discount}% OFF</span>
+                                </div>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="card-title">${product.name}</h6>
+                                <p class="card-text small text-muted mb-2">
+                                    <i class="fas fa-weight me-1"></i>${product.weight}
+                                </p>
+                                <div class="product-rating mb-3">
+                                    ${getStarRating(product.rating)}
+                                    <small class="text-muted ms-1">(${product.rating})</small>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                    <div>
+                                        <span class="h5 text-danger mb-0">${formatIndianRupees(product.price)}</span>
+                                        <del class="text-muted ms-2">${formatIndianRupees(product.comparePrice)}</del>
+                                    </div>
+                                    <button class="btn btn-danger btn-sm add-to-cart" 
+                                        data-id="${product.id}"
+                                        data-name="${product.name}"
+                                        data-price="${product.price}"
+                                        data-image="${product.image}">
+                                        <i class="fas fa-bolt"></i> Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Timer functions
+        function startSaleTimer() {
+            let seconds = 45;
+            let minutes = 30;
+            let hours = 2;
+            
+            const timerInterval = setInterval(() => {
+                seconds--;
+                
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                    
+                    if (minutes < 0) {
+                        minutes = 59;
+                        hours--;
+                        
+                        if (hours < 0) {
+                            clearInterval(timerInterval);
+                            document.querySelectorAll('.timer-value').forEach(el => {
+                                el.textContent = '00';
+                            });
+                            document.getElementById('sale-timer').textContent = 'Sale Ended';
+                            return;
+                        }
+                    }
+                }
+                
+                // Update display
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                
+                // Update sale timer
+                document.getElementById('sale-timer').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNavbar();
+            loadFooter();
+            updateCartCount();
+            loadFeaturedProducts();
+            loadFlashSaleProducts();
+            startSaleTimer();
+            
+            // Setup add to cart buttons
+            setupAddToCart();
+        });
+    </script>
+</body>
+</html>

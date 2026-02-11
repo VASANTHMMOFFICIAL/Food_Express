@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - FoodExpress</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .signup-hero {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44b7b0 100%);
+            color: white;
+        }
+        
+        .password-field {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+        }
+        
+        .benefit-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #e8f6f5;
+            color: #4ecdc4;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .strength-meter {
+            height: 5px;
+            background-color: #eee;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #ff6b6b;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <!-- Signup Hero Section -->
+    <div class="signup-hero py-5">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-3">Join FoodExpress</h1>
+            <p class="lead mb-4">Create your account to enjoy faster checkout, order tracking, exclusive deals, and more!</p>
+            <div class="d-flex justify-content-center gap-4 flex-wrap">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-bolt"></i>
+                    <span>Fast Checkout</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-tag"></i>
+                    <span>Exclusive Deals</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-truck"></i>
+                    <span>Order Tracking</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Signup Content -->
+    <div class="container py-5">
+        <div class="row g-5">
+            <!-- Signup Form -->
+            <div class="col-lg-6">
+                <div class="card shadow">
+                    <div class="card-body p-4 p-md-5">
+                        <h2 class="mb-4">Create Your Account</h2>
+                        <p class="text-muted mb-4">Fill in your details to get started</p>
+                        
+                        <form id="signupForm">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="first-name" class="form-label">First Name *</label>
+                                    <input type="text" class="form-control" id="first-name" placeholder="John" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="last-name" class="form-label">Last Name *</label>
+                                    <input type="text" class="form-control" id="last-name" placeholder="Doe" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="email" placeholder="john@example.com" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" placeholder="+1 (555) 123-4567">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password *</label>
+                                <div class="password-field">
+                                    <input type="password" class="form-control" id="password" placeholder="Create a strong password" required>
+                                    <button type="button" class="password-toggle" id="toggle-password">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="mt-2">
+                                    <div class="strength-meter">
+                                        <div class="strength-bar" id="password-strength-bar"></div>
+                                    </div>
+                                    <small class="text-muted" id="password-strength-text">Password strength</small>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="confirm-password" class="form-label">Confirm Password *</label>
+                                <div class="password-field">
+                                    <input type="password" class="form-control" id="confirm-password" placeholder="Confirm your password" required>
+                                    <button type="button" class="password-toggle" id="toggle-confirm-password">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="birthday" class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" id="birthday">
+                                <small class="text-muted">Used for birthday surprises!</small>
+                            </div>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and <a href="#" class="text-decoration-none">Privacy Policy</a>.
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="newsletter" checked>
+                                <label class="form-check-label" for="newsletter">
+                                    Receive exclusive offers, recipes, and updates via email.
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg w-100 mb-4">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </button>
+                            
+                            <div class="text-center mb-4 position-relative">
+                                <hr>
+                                <span class="bg-white px-3 position-absolute top-50 start-50 translate-x-n50 translate-y-n50 text-muted">Or sign up with</span>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-outline-secondary" id="google-signup">
+                                    <i class="fab fa-google me-2"></i>Continue with Google
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" id="facebook-signup">
+                                    <i class="fab fa-facebook-f me-2"></i>Continue with Facebook
+                                </button>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <p class="mb-0">Already have an account? <a href="login.html" class="text-decoration-none">Log in here</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Benefits Section -->
+            <div class="col-lg-6">
+                <div class="card shadow h-100">
+                    <div class="card-body p-4 p-md-5">
+                        <h2 class="mb-4">Why Join FoodExpress?</h2>
+                        <p class="text-muted mb-4">Discover the benefits of being a member</p>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="d-flex gap-3 mb-4">
+                                    <div class="benefit-icon flex-shrink-0">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="h6">Faster Checkout</h5>
+                                        <p class="small text-muted mb-0">Save your details for quick ordering.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex gap-3 mb-4">
+                                    <div class="benefit-icon flex-shrink-0">
+                                        <i class="fas fa-history"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="h6">Order Tracking</h5>
+                                        <p class="small text-muted mb-0">Track your current orders in real-time.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex gap-3 mb-4">
+                                    <div class="benefit-icon flex-shrink-0">
+                                        <i class="fas fa-gift"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="h6">Exclusive Deals</h5>
+                                        <p class="small text-muted mb-0">Get special discounts and offers.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex gap-3 mb-4">
+                                    <div class="benefit-icon flex-shrink-0">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="h6">Rewards Program</h5>
+                                        <p class="small text-muted mb-0">Earn points on every purchase.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card border-start border-primary border-3 mt-4">
+                            <div class="card-body">
+                                <blockquote class="blockquote mb-0">
+                                    <p class="small mb-3">"Since joining FoodExpress, grocery shopping has become so much easier! The personalized recommendations are spot on, and I love the exclusive member deals."</p>
+                                    <footer class="blockquote-footer">Sarah Johnson, <cite title="Source Title">Member since 2022</cite></footer>
+                                </blockquote>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-warning mt-4 d-flex align-items-center">
+                            <i class="fas fa-shield-alt fa-2x me-3"></i>
+                            <div>
+                                <h5 class="alert-heading mb-1">Your Security is Our Priority</h5>
+                                <p class="mb-0 small">We use bank-level encryption to protect your personal information.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center p-5">
+                    <i class="fas fa-check-circle text-success fa-4x mb-4"></i>
+                    <h3 class="mb-3">Account Created Successfully!</h3>
+                    <p class="text-muted mb-4">Welcome to FoodExpress! Your account has been created successfully.</p>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" onclick="window.location.href='index.html'">
+                            <i class="fas fa-home me-2"></i>Go to Homepage
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="window.location.href='index.html'">
+                            <i class="fas fa-shopping-cart me-2"></i>Start Shopping
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

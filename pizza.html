@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Delivery - FoodExpress India | Fresh Pizza Online</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --indian-saffron: #FF9933;
+            --indian-green: #138808;
+            --indian-blue: #000080;
+            --indian-red: #E53E3E;
+            --indian-yellow: #FFD700;
+        }
+        
+        .pizza-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            border-radius: 0 0 20px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pizza-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--indian-saffron) 33%, white 33%, white 66%, var(--indian-green) 66%);
+        }
+        
+        .hero-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--indian-saffron), var(--indian-green));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+        
+        .category-tab {
+            padding: 12px 24px;
+            background-color: white;
+            border: 2px solid var(--indian-saffron);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .category-tab:hover, .category-tab.active {
+            background-color: var(--indian-saffron);
+            color: white;
+        }
+        
+        .size-option {
+            padding: 8px 16px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .size-option:hover, .size-option.active {
+            background-color: var(--indian-saffron);
+            color: white;
+            border-color: var(--indian-saffron);
+        }
+        
+        .pizza-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: var(--indian-saffron);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .veg-badge {
+            background-color: var(--indian-green);
+        }
+        
+        .nonveg-badge {
+            background-color: var(--indian-red);
+        }
+        
+        .spicy-badge {
+            background-color: #ff4500;
+        }
+        
+        .quick-view-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        
+        .product-card:hover .quick-view-btn {
+            opacity: 1;
+        }
+        
+        .topping-item {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .topping-item:hover, .topping-item.selected {
+            border-color: var(--indian-saffron);
+            background-color: #fff5f5;
+        }
+        
+        .topping-icon {
+            font-size: 2rem;
+            color: var(--indian-saffron);
+            margin-bottom: 10px;
+        }
+        
+        .ingredient-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            background-color: #e9ecef;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 2px;
+        }
+        
+        .pizza-deal-card {
+            background: linear-gradient(135deg, var(--indian-saffron) 0%, #ff8c00 100%);
+            color: white;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .deal-price {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        
+        .indian-price {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+        
+        .indian-price::before {
+            content: '₹';
+        }
+        
+        .pizza-timer {
+            background-color: var(--indian-red);
+            color: white;
+            border-radius: 50px;
+            padding: 5px 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        
+        .indian-topping {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .tandoori-badge {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+        
+        .indian-style-badge {
+            background: linear-gradient(135deg, #ff9933, #ff6600);
+            color: white;
+        }
+        
+        .spice-meter {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .spice-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+        }
+        
+        .spice-dot.active {
+            background-color: var(--indian-red);
+        }
+        
+        .indian-combo-badge {
+            background-color: var(--indian-green);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .upi-offer {
+            background-color: #e3f2fd;
+            border-left: 4px solid var(--indian-blue);
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .indian-payment-badge {
+            background: linear-gradient(135deg, #5F259F, #8B5CF6);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .category-tab {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .hero-badge {
+                top: 10px;
+                right: 10px;
+                font-size: 0.7rem;
+                padding: 6px 12px;
+            }
+            
+            .deal-price {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <!-- Pizza Hero Section -->
+    <div class="pizza-hero py-5">
+        <div class="hero-badge">
+            <i class="fas fa-fire me-1"></i> Hot & Fresh in 30 Mins
+        </div>
+        
+        <div class="container text-center py-5 position-relative">
+            <h1 class="display-4 fw-bold mb-3">Fresh Pizza Delivered Hot!</h1>
+            <p class="lead mb-4">Authentic Italian & Indian-style pizzas made fresh and delivered to your doorstep</p>
+            <div class="d-flex justify-content-center gap-4 flex-wrap">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-clock text-warning"></i>
+                    <span>30 Minutes Delivery</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-rupee-sign text-success"></i>
+                    <span>Free delivery above ₹199</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fas fa-pepper-hot text-danger"></i>
+                    <span>Spicy Indian Options</span>
+                </div>
+            </div>
+            
+            <!-- UPI Offer -->
+            <div class="mt-4">
+                <div class="upi-offer d-inline-block">
+                    <i class="fas fa-qrcode text-primary me-2"></i>
+                    <strong>UPI Payment:</strong> Get 10% cashback on PhonePe & Google Pay
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pizza Special Deals -->
+    <div class="container py-4">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="pizza-deal-card p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h3 class="fw-bold mb-2">Maha Pizza Deal</h3>
+                            <p class="mb-3">2 Large Pizzas + Garlic Bread + 2 Cold Drinks</p>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="deal-price indian-price">599</div>
+                                <div>
+                                    <del class="opacity-75">₹849</del>
+                                    <div class="badge bg-white text-danger">Save ₹250</div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <span class="indian-payment-badge">
+                                    <i class="fab fa-google-pay"></i>
+                                    Extra 5% off on GPay
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <i class="fas fa-pizza-slice fa-4x mb-3"></i>
+                            <button class="btn btn-light btn-lg w-100 fw-bold" id="maha-deal-btn">
+                                <i class="fas fa-bolt me-2"></i>ORDER NOW
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-warning h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="pizza-timer mb-3">
+                            <i class="fas fa-clock"></i>
+                            <span id="timer">30:00</span>
+                        </div>
+                        <h5 class="card-title">Evening Special</h5>
+                        <p class="card-text">25% off on all medium pizzas. Order before 7 PM</p>
+                        <div class="display-6 text-warning fw-bold indian-price">99</div>
+                        <small class="text-muted">Starting at</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Indian Pizza Specials -->
+    <div class="bg-light py-4">
+        <div class="container">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fas fa-flag-india fa-2x text-danger me-3"></i>
+                <div>
+                    <h4 class="mb-1">Indian Specialties</h4>
+                    <p class="text-muted mb-0">Unique Indian-style pizzas with local flavors</p>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-6 col-md-3">
+                    <div class="card border-danger h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-pepper-hot fa-2x text-danger mb-2"></i>
+                            <h6 class="mb-1">Tandoori Paneer</h6>
+                            <p class="text-muted small mb-2">Spicy & flavorful</p>
+                            <div class="text-warning fw-bold indian-price">299</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-warning h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-drumstick-bite fa-2x text-warning mb-2"></i>
+                            <h6 class="mb-1">Chicken Tikka</h6>
+                            <p class="text-muted small mb-2">Classic favorite</p>
+                            <div class="text-warning fw-bold indian-price">349</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-success h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-leaf fa-2x text-success mb-2"></i>
+                            <h6 class="mb-1">Veg Supreme</h6>
+                            <p class="text-muted small mb-2">Loaded vegetables</p>
+                            <div class="text-warning fw-bold indian-price">249</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-primary h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-fire fa-2x text-primary mb-2"></i>
+                            <h6 class="mb-1">Spicy Keema</h6>
+                            <p class="text-muted small mb-2">Extra spicy</p>
+                            <div class="text-warning fw-bold indian-price">399</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pizza Categories -->
+    <div class="container py-5">
+        <!-- Category Tabs -->
+        <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
+            <div class="category-tab active" data-category="all">
+                <i class="fas fa-th"></i> All Pizzas
+            </div>
+            <div class="category-tab" data-category="indian">
+                <i class="fas fa-flag"></i> Indian Style
+            </div>
+            <div class="category-tab" data-category="italian">
+                <i class="fas fa-pizza-slice"></i> Italian Classic
+            </div>
+            <div class="category-tab" data-category="vegetarian">
+                <i class="fas fa-leaf"></i> Pure Veg
+            </div>
+            <div class="category-tab" data-category="nonveg">
+                <i class="fas fa-drumstick-bite"></i> Non-Veg
+            </div>
+            <div class="category-tab" data-category="cheese">
+                <i class="fas fa-cheese"></i> Extra Cheese
+            </div>
+        </div>
+        
+        <!-- Size Options -->
+        <div class="card mb-5 shadow-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="fw-bold">Crust Type:</span>
+                            <select class="form-select form-select-sm w-auto" id="crust-type">
+                                <option value="all">All Crusts</option>
+                                <option value="hand-tossed">Hand Tossed</option>
+                                <option value="thin">Thin Crust</option>
+                                <option value="deep-dish">Cheese Burst</option>
+                                <option value="wheat">Wheat Crust</option>
+                                <option value="gluten-free">Gluten-Free</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="fw-bold">Pizza Size:</span>
+                            <span class="size-option active" data-size="all">All Sizes</span>
+                            <span class="size-option" data-size="personal">Personal (6")</span>
+                            <span class="size-option" data-size="regular">Regular (9")</span>
+                            <span class="size-option" data-size="medium">Medium (12")</span>
+                            <span class="size-option" data-size="large">Large (14")</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex gap-2 mt-3 flex-wrap">
+                    <span class="badge bg-success">
+                        <i class="fas fa-leaf me-1"></i>Pure Veg
+                    </span>
+                    <span class="badge bg-danger">
+                        <i class="fas fa-pepper-hot me-1"></i>Spicy
+                    </span>
+                    <span class="badge bg-warning">
+                        <i class="fas fa-fire me-1"></i>Tandoori
+                    </span>
+                    <span class="badge bg-primary">
+                        <i class="fas fa-star me-1"></i>Chef's Special
+                    </span>
+                    <span class="badge bg-info">
+                        <i class="fas fa-bolt me-1"></i>30 Min Delivery
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pizza Grid -->
+        <div class="row g-4 mb-5" id="pizza-grid">
+            <!-- Pizzas will be loaded via JavaScript -->
+        </div>
+        
+        <!-- Build Your Own Pizza -->
+        <div class="card shadow-lg mb-5 border-warning">
+            <div class="card-header bg-warning text-white">
+                <h3 class="mb-0">
+                    <i class="fas fa-utensils me-2"></i>Build Your Own Pizza
+                </h3>
+            </div>
+            <div class="card-body p-0">
+                <div class="row g-0">
+                    <div class="col-lg-8 p-4">
+                        <h4 class="mb-4">Customize Your Creation</h4>
+                        
+                        <!-- Step 1: Choose Size -->
+                        <div class="mb-4">
+                            <h5 class="mb-3">1. Choose Size & Crust</h5>
+                            <div class="row g-3">
+                                <div class="col-6 col-md-3">
+                                    <div class="topping-item">
+                                        <div class="topping-icon">
+                                            <i class="fas fa-pizza-slice"></i>
+                                        </div>
+                                        <h6 class="mb-1">Personal (6")</h6>
+                                        <p class="text-muted small mb-0 indian-price">149</p>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="topping-item selected">
+                                        <div class="topping-icon">
+                                            <i class="fas fa-pizza-slice"></i>
+                                        </div>
+                                        <h6 class="mb-1">Regular (9")</h6>
+                                        <p class="text-muted small mb-0 indian-price">249</p>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="topping-item">
+                                        <div class="topping-icon">
+                                            <i class="fas fa-pizza-slice"></i>
+                                        </div>
+                                        <h6 class="mb-1">Medium (12")</h6>
+                                        <p class="text-muted small mb-0 indian-price">349</p>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="topping-item">
+                                        <div class="topping-icon">
+                                            <i class="fas fa-pizza-slice"></i>
+                                        </div>
+                                        <h6 class="mb-1">Large (14")</h6>
+                                        <p class="text-muted small mb-0 indian-price">449</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2: Choose Sauce -->
+                        <div class="mb-4">
+                            <h5 class="mb-3">2. Choose Sauce (₹0-₹30)</h5>
+                            <div class="row g-3">
+                                <div class="col-6 col-md-4">
+                                    <div class="topping-item selected">
+                                        <div class="topping-icon">
+                                            <i class="fas fa-mortar-pestle"></i>
+                                        </div>
+                                        <h6 class="mb-1">Tomato</h6>
+                                        <p class="text-muted small mb-0 indian-price">0</p>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <div class="topping-item">
+                                        <div class="topping-icon">
+                                            <i class="fas fa-pepper-hot"></i>
+                                        </div>
+                                        <h6 class="mb-1">Schezwan</h6>
+                                        <p class="text-muted small mb-0 indian-price">+30</p>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4">
+                                    <div class="topping-item">
+                                        <div class="topping-icon">
+                                            <i class="fas fa-cheese"></i>
+                                        </div>
+                                        <h6 class="mb-1">Cheese</h6>
+                                        <p class="text-muted small mb-0 indian-price">+30</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: Choose Toppings -->
+                        <div class="mb-4">
+                            <h5 class="mb-3">3. Add Toppings (₹40 each)</h5>
+                            <div class="row g-3">
+                                <!-- Veg Toppings -->
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="topping-item">
+                                        <div class="topping-icon">
+                                            <i class="fas fa-cheese"></i>
+                                        </div>
+                                        <h6 class="mb-1">Extra Cheese</h6>
+                                        <span class="badge bg-success">VEG</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="topping-item selected">
+                                        <div class="topping-icon">
+                                            <i class="fas fa-seedling"></i>
+                                        </div>
+                                        <h6 class="mb-1">Paneer</h6>
+                                        <span class="badge bg-success">VEG</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="topping-item">
+                                        <div class="topping-icon">
+                                            <i class="fas fa-pepper-hot"></i>
+                                        </div>
+                                        <h6 class="mb-1">Jalapeno</h6>
+                                        <span class="badge bg-success">VEG</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Non-Veg Toppings -->
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="topping-item">
+                                        <div class="topping-icon">
+                                            <i class="fas fa-drumstick-bite"></i>
+                                        </div>
+                                        <h6 class="mb-1">Chicken</h6>
+                                        <span class="badge bg-danger">NON-VEG</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="topping-item">
+                                        <div class="topping-icon">
+                                            <i class="fas fa-bacon"></i>
+                                        </div>
+                                        <h6 class="mb-1">Pepperoni</h6>
+                                        <span class="badge bg-danger">NON-VEG</span>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="topping-item">
+                                        <div class="topping-icon">
+                                            <i class="fas fa-drumstick-bite"></i>
+                                        </div>
+                                        <h6 class="mb-1">Keema</h6>
+                                        <span class="badge bg-danger">NON-VEG</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 bg-light p-4">
+                        <h4 class="mb-4">Your Pizza</h4>
+                        <div class="mb-4">
+                            <img src="https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                                 class="img-fluid rounded mb-3" 
+                                 alt="Custom Pizza">
+                            <div class="text-center">
+                                <span class="badge bg-success me-2">VEG</span>
+                                <span class="badge bg-warning">REGULAR SIZE</span>
+                            </div>
+                        </div>
+                        
+                        <div class="customize-option">
+                            <span>Regular Pizza (9")</span>
+                            <span class="fw-bold indian-price">249</span>
+                        </div>
+                        <div class="customize-option">
+                            <span>Tomato Sauce</span>
+                            <span class="fw-bold indian-price">0</span>
+                        </div>
+                        <div class="customize-option">
+                            <span>Paneer Topping</span>
+                            <span class="fw-bold indian-price">40</span>
+                        </div>
+                        <div class="customize-option">
+                            <span>Delivery Fee</span>
+                            <span class="fw-bold indian-price">30</span>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="mb-0">Total</h5>
+                            <h3 class="text-primary mb-0 indian-price">319</h3>
+                        </div>
+                        
+                        <!-- UPI Offer -->
+                        <div class="alert alert-success mb-3">
+                            <i class="fas fa-qrcode me-2"></i>
+                            <strong>UPI Payment:</strong> Pay ₹287 only
+                        </div>
+                        
+                        <button class="btn btn-warning btn-lg w-100 mb-3" id="add-custom-pizza">
+                            <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                        </button>
+                        
+                        <button class="btn btn-outline-warning w-100" id="start-over">
+                            <i class="fas fa-redo me-2"></i>Start Over
+                        </button>
+                        
+                        <!-- COD Option -->
+                        <div class="mt-3 text-center">
+                            <small class="text-muted">
+                                <i class="fas fa-money-bill-wave me-1"></i>
+                                Cash on Delivery Available
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Indian Pizza Combos -->
+    <div class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">
+                <i class="fas fa-gift text-warning me-2"></i>
+                Perfect Pizza Combos
+            </h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <span class="indian-combo-badge mb-3">MOST POPULAR</span>
+                            <h4 class="text-warning mb-3">Family Feast</h4>
+                            <p class="text-muted">2 Large Pizzas + Garlic Bread + 1L Coke</p>
+                            <div class="display-4 text-primary mb-3 indian-price">799</div>
+                            <del class="text-muted indian-price">999</del>
+                            <div class="mt-3">
+                                <button class="btn btn-warning btn-lg w-100">
+                                    <i class="fas fa-bolt me-2"></i>Order Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-warning">
+                        <div class="card-body text-center p-4">
+                            <span class="indian-combo-badge mb-3">BEST VALUE</span>
+                            <h4 class="text-warning mb-3">Friends Party</h4>
+                            <p class="text-muted">3 Medium Pizzas + 4 Garlic Bread + 1.5L Coke</p>
+                            <div class="display-4 text-primary mb-3 indian-price">1099</div>
+                            <del class="text-muted indian-price">1399</del>
+                            <div class="mt-3">
+                                <button class="btn btn-warning btn-lg w-100">
+                                    <i class="fas fa-users me-2"></i>Order for Group
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <span class="indian-combo-badge mb-3">WEEKEND SPECIAL</span>
+                            <h4 class="text-warning mb-3">Weekend Treat</h4>
+                            <p class="text-muted">1 Large Pizza + Pasta + Brownie + 2 Drinks</p>
+                            <div class="display-4 text-primary mb-3 indian-price">649</div>
+                            <del class="text-muted indian-price">799</del>
+                            <div class="mt-3">
+                                <button class="btn btn-warning btn-lg w-100">
+                                    <i class="fas fa-weekend me-2"></i>Weekend Order
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Complete Your Meal -->
+    <div class="container py-5">
+        <h2 class="text-center mb-5">Complete Your Meal</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-beer fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Drinks & Beverages</h5>
+                        <p class="card-text text-muted">Coke, Pepsi, Mirinda, Thums Up</p>
+                        <div class="indian-price fw-bold">49</div>
+                        <small class="text-muted">Starting at</small>
+                        <a href="#" class="btn btn-outline-primary mt-3">View Drinks</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-bread-slice fa-3x text-warning mb-3"></i>
+                        <h5 class="card-title">Garlic Bread & More</h5>
+                        <p class="card-text text-muted">Garlic bread, cheese sticks, wedges</p>
+                        <div class="indian-price fw-bold">99</div>
+                        <small class="text-muted">Starting at</small>
+                        <a href="#" class="btn btn-outline-warning mt-3">View Sides</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-ice-cream fa-3x text-danger mb-3"></i>
+                        <h5 class="card-title">Desserts</h5>
+                        <p class="card-text text-muted">Choco lava cake, brownie, ice cream</p>
+                        <div class="indian-price fw-bold">129</div>
+                        <small class="text-muted">Starting at</small>
+                        <a href="#" class="btn btn-outline-danger mt-3">View Desserts</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <!-- Quick View Modal -->
+    <div class="modal fade" id="quickViewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Pizza Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <!-- Modal content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Indian Pizza Data
+        const indianPizzas = [
+            {
+                id: 301,
+                name: "Paneer Makhani Pizza",
+                price: 349,
+                comparePrice: 399,
+                image: "https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                rating: 4.8,
+                category: "indian",
+                description: "Soft paneer cubes in rich makhani sauce with capsicum and onions",
+                crust: "hand-tossed",
+                size: "medium",
+                ingredients: ["Paneer", "Makhani Sauce", "Capsicum", "Onion", "Cheese"],
+                dietary: ["vegetarian"],
+                spiceLevel: 2,
+                cookTime: 15,
+                inStock: true,
+                isFeatured: true,
+                isChefSpecial: true,
+                tags: ["Indian", "Tandoori", "Veg"]
+            },
+            {
+                id: 302,
+                name: "Chicken Tikka Pizza",
+                price: 399,
+                comparePrice: 449,
+                image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                rating: 4.9,
+                category: "indian",
+                description: "Spicy chicken tikka pieces with onions and capsicum",
+                crust: "hand-tossed",
+                size: "medium",
+                ingredients: ["Chicken Tikka", "Onion", "Capsicum", "Cheese", "Spices"],
+                dietary: ["nonveg"],
+                spiceLevel: 3,
+                cookTime: 18,
+                inStock: true,
+                isFeatured: true,
+                isChefSpecial: false,
+                tags: ["Indian", "Tandoori", "Non-Veg"]
+            },
+            {
+                id: 303,
+                name: "Margherita Classic",
+                price: 299,
+                comparePrice: 349,
+                image: "https://images.unsplash.com/photo-1595708684082-a173bb3a06c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                rating: 4.7,
+                category: "italian",
+                description: "Classic Italian pizza with fresh mozzarella and basil",
+                crust: "thin",
+                size: "medium",
+                ingredients: ["Mozzarella", "Tomato Sauce", "Basil", "Olive Oil"],
+                dietary: ["vegetarian"],
+                spiceLevel: 1,
+                cookTime: 12,
+                inStock: true,
+                isFeatured: false,
+                isChefSpecial: true,
+                tags: ["Italian", "Classic", "Veg"]
+            },
+            {
+                id: 304,
+                name: "Pepperoni Feast",
+                price: 379,
+                comparePrice: null,
+                image: "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                rating: 4.6,
+                category: "italian",
+                description: "Double pepperoni with extra cheese and oregano",
+                crust: "hand-tossed",
+                size: "large",
+                ingredients: ["Pepperoni", "Cheese", "Tomato Sauce", "Oregano"],
+                dietary: ["nonveg"],
+                spiceLevel: 2,
+                cookTime: 16,
+                inStock: true,
+                isFeatured: true,
+                isChefSpecial: false,
+                tags: ["Italian", "Non-Veg"]
+            },
+            {
+                id: 305,
+                name: "Veggie Supreme",
+                price: 329,
+                comparePrice: 379,
+                image: "https://images.unsplash.com/photo-1571066811602-716ddb3c8a35?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                rating: 4.5,
+                category: "vegetarian",
+                description: "Loaded with fresh vegetables and cheese",
+                crust: "cheese-burst",
+                size: "medium",
+                ingredients: ["Capsicum", "Onion", "Tomato", "Corn", "Olives", "Cheese"],
+                dietary: ["vegetarian"],
+                spiceLevel: 1,
+                cookTime: 17,
+                inStock: true,
+                isFeatured: false,
+                isChefSpecial: false,
+                tags: ["Veg", "Loaded"]
+            },
+            {
+                id: 306,
+                name: "Keema Do Pyaza",
+                price: 429,
+                comparePrice: 479,
+                image: "https://images.unsplash.com/photo-1593246049226-ded77bf90326?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                rating: 4.8,
+                category: "indian",
+                description: "Spicy minced meat with double onions and Indian spices",
+                crust: "hand-tossed",
+                size: "large",
+                ingredients: ["Minced Meat", "Onion", "Spices", "Cheese", "Coriander"],
+                dietary: ["nonveg"],
+                spiceLevel: 4,
+                cookTime: 20,
+                inStock: true,
+                isFeatured: true,
+                isChefSpecial: true,
+                tags: ["Indian", "Spicy", "Non-Veg"]
+            },
+            {
+                id: 307,
+                name: "Cheese Burst Pizza",
+                price: 359,
+                comparePrice: 399,
+                image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                rating: 4.7,
+                category: "cheese",
+                description: "Double layer of cheese in every bite",
+                crust: "deep-dish",
+                size: "medium",
+                ingredients: ["Mozzarella", "Cheddar", "Parmesan", "Tomato Sauce"],
+                dietary: ["vegetarian"],
+                spiceLevel: 1,
+                cookTime: 18,
+                inStock: true,
+                isFeatured: true,
+                isChefSpecial: false,
+                tags: ["Cheese", "Veg"]
+            },
+            {
+                id: 308,
+                name: "Wheat Crust Veggie",
+                price: 299,
+                comparePrice: null,
+                image: "https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                rating: 4.4,
+                category: "vegetarian",
+                description: "Healthy wheat crust with fresh vegetables",
+                crust: "wheat",
+                size: "regular",
+                ingredients: ["Bell Peppers", "Onions", "Mushrooms", "Olives", "Light Cheese"],
+                dietary: ["vegetarian"],
+                spiceLevel: 1,
+                cookTime: 15,
+                inStock: true,
+                isFeatured: false,
+                isChefSpecial: true,
+                tags: ["Healthy", "Veg", "Wheat"]
+            }
+        ];
+
+        // Format Indian currency
+        function formatIndianRupees(amount) {
+            return '₹' + amount.toFixed(0);
+        }
+
+        // Get star rating HTML
+        function getStarRating(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star text-warning"></i>';
+            }
+            
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt text-warning"></i>';
+            }
+            
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star text-warning"></i>';
+            }
+            
+            return stars;
+        }
+
+        // Get spice level HTML
+        function getSpiceLevel(spiceLevel) {
+            let dots = '';
+            for (let i = 0; i < 5; i++) {
+                dots += `<span class="spice-dot ${i < spiceLevel ? 'active' : ''}"></span>`;
+            }
+            return `<div class="spice-meter">${dots}</div>`;
+        }
+
+        // Load pizza items
+        function loadPizzaItems(category = 'all', crust = 'all', size = 'all') {
+            const pizzaGrid = document.getElementById('pizza-grid');
+            
+            // Filter by category
+            let filteredPizzas = indianPizzas;
+            if (category !== 'all') {
+                filteredPizzas = indianPizzas.filter(item => item.category === category);
+            }
+            
+            // Filter by crust
+            if (crust !== 'all') {
+                filteredPizzas = filteredPizzas.filter(item => {
+                    if (crust === 'deep-dish') return item.crust === 'cheese-burst';
+                    return item.crust === crust;
+                });
+            }
+            
+            // Filter by size
+            if (size !== 'all') {
+                filteredPizzas = filteredPizzas.filter(item => item.size === size);
+            }
+            
+            // Sort by featured first, then rating
+            filteredPizzas.sort((a, b) => {
+                if (a.isFeatured && !b.isFeatured) return -1;
+                if (!a.isFeatured && b.isFeatured) return 1;
+                return b.rating - a.rating;
+            });
+            
+            // Display pizza items
+            pizzaGrid.innerHTML = filteredPizzas.map(item => `
+                <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="card product-card h-100">
+                        <div class="position-relative">
+                            <img src="${item.image}" class="card-img-top" alt="${item.name}" style="height: 200px; object-fit: cover;">
+                            ${item.isFeatured ? '<div class="pizza-badge">FEATURED</div>' : ''}
+                            ${item.dietary.includes('vegetarian') ? '<div class="pizza-badge veg-badge">VEG</div>' : '<div class="pizza-badge nonveg-badge">NON-VEG</div>'}
+                            ${item.isChefSpecial ? '<div class="pizza-badge indian-style-badge">CHEF SPECIAL</div>' : ''}
+                            ${item.spiceLevel >= 3 ? '<div class="pizza-badge spicy-badge">SPICY</div>' : ''}
+                            <div class="quick-view-btn" data-id="${item.id}">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small class="text-muted text-uppercase">${item.crust}</small>
+                                <small class="text-muted">${item.size}"</small>
+                            </div>
+                            <h5 class="card-title">${item.name}</h5>
+                            <p class="card-text text-muted small mb-3">${item.description}</p>
+                            
+                            <div class="mb-3">
+                                ${item.tags.map(tag => `
+                                    <span class="ingredient-badge">${tag}</span>
+                                `).join('')}
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="product-rating">
+                                    ${getStarRating(item.rating)}
+                                    <small class="text-muted ms-1">(${item.rating})</small>
+                                </div>
+                                <div class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>${item.cookTime} min
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Spice Level:</small>
+                                ${getSpiceLevel(item.spiceLevel)}
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                <div>
+                                    <span class="h4 text-primary indian-price">${item.price}</span>
+                                    ${item.comparePrice ? `<del class="text-muted ms-2 indian-price">${item.comparePrice}</del>` : ''}
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <button class="btn btn-outline-warning btn-sm customize-btn" data-id="${item.id}">
+                                        <i class="fas fa-cog"></i>
+                                    </button>
+                                    <button class="btn btn-warning add-to-cart" 
+                                        data-id="${item.id}"
+                                        data-name="${item.name}"
+                                        data-price="${item.price}"
+                                        data-image="${item.image}">
+                                        <i class="fas fa-cart-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Add event listeners to quick view buttons
+            document.querySelectorAll('.quick-view-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const itemId = parseInt(this.dataset.id);
+                    showQuickView(itemId);
+                });
+            });
+            
+            // Add event listeners to customize buttons
+            document.querySelectorAll('.customize-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const card = this.closest('.card');
+                    const name = card.querySelector('.card-title').textContent;
+                    showCustomizationModal(name);
+                });
+            });
+        }
+
+        // Show quick view modal
+        function showQuickView(itemId) {
+            const item = indianPizzas.find(pizza => pizza.id === itemId);
+            if (!item) return;
+            
+            const modal = new bootstrap.Modal(document.getElementById('quickViewModal'));
+            const modalBody = document.getElementById('modal-body');
+            const modalTitle = document.getElementById('modal-title');
+            
+            modalTitle.textContent = item.name;
+            
+            modalBody.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="${item.image}" class="img-fluid rounded mb-3" alt="${item.name}">
+                        <div class="d-flex gap-2 mb-3">
+                            ${item.dietary.includes('vegetarian') ? 
+                                '<span class="badge bg-success">VEGETARIAN</span>' : 
+                                '<span class="badge bg-danger">NON-VEGETARIAN</span>'
+                            }
+                            ${item.isFeatured ? '<span class="badge bg-primary">FEATURED</span>' : ''}
+                            ${item.isChefSpecial ? '<span class="badge bg-warning">CHEF SPECIAL</span>' : ''}
+                            <span class="badge bg-info">${item.crust.toUpperCase()}</span>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <h6>Spice Level</h6>
+                                ${getSpiceLevel(item.spiceLevel)}
+                                <small class="text-muted">${item.spiceLevel === 1 ? 'Mild' : 
+                                                          item.spiceLevel === 2 ? 'Medium' : 
+                                                          item.spiceLevel === 3 ? 'Spicy' : 
+                                                          item.spiceLevel === 4 ? 'Very Spicy' : 'Extreme'}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>${item.name}</h4>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="product-rating me-3">
+                                ${getStarRating(item.rating)}
+                            </div>
+                            <span class="text-muted">(${item.rating} rating)</span>
+                        </div>
+                        
+                        <p class="mb-4">${item.description}</p>
+                        
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h6 class="mb-0">Ingredients</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    ${item.ingredients.map(ingredient => `
+                                        <div class="col-6 mb-2">
+                                            <i class="fas fa-check text-success me-2"></i>${ingredient}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <div class="display-6 text-primary indian-price">${item.price}</div>
+                                    <small class="text-muted">Price</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <div class="display-6 text-primary">${item.cookTime}</div>
+                                    <small class="text-muted">Cooking Time</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h3 class="text-primary mb-0 indian-price">${item.price}</h3>
+                                        ${item.comparePrice ? `
+                                            <del class="text-muted indian-price">${item.comparePrice}</del>
+                                            <span class="badge bg-success ms-2">Save ₹${item.comparePrice - item.price}</span>
+                                        ` : ''}
+                                    </div>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <div class="input-group" style="width: 120px;">
+                                            <button class="btn btn-outline-secondary" type="button">-</button>
+                                            <input type="number" class="form-control text-center" value="1" min="1">
+                                            <button class="btn btn-outline-secondary" type="button">+</button>
+                                        </div>
+                                        <button class="btn btn-warning add-to-cart" 
+                                            data-id="${item.id}"
+                                            data-name="${item.name}"
+                                            data-price="${item.price}"
+                                            data-image="${item.image}"
+                                            onclick="bootstrap.Modal.getInstance(document.getElementById('quickViewModal')).hide()">
+                                            Add to Cart
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-shipping-fast me-2"></i>
+                            Free delivery on orders above ₹199
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            modal.show();
+        }
+
+        // Show customization modal
+        function showCustomizationModal(pizzaName) {
+            alert(`Customize ${pizzaName} - Select your preferred crust, toppings, and spice level`);
+        }
+
+        // Timer countdown
+        function updateTimer() {
+            const timerElement = document.getElementById('timer');
+            if (!timerElement) return;
+            
+            let minutes = 30;
+            let seconds = 0;
+            
+            const interval = setInterval(() => {
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        clearInterval(interval);
+                        timerElement.textContent = "00:00";
+                        return;
+                    }
+                    minutes--;
+                    seconds = 59;
+                } else {
+                    seconds--;
+                }
+                
+                timerElement.textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // Update custom pizza total
+        function updateCustomPizzaTotal() {
+            let total = 0;
+            
+            // Size price
+            const selectedSize = document.querySelector('.topping-item.selected[class*="Personal"], .topping-item.selected[class*="Regular"], .topping-item.selected[class*="Medium"], .topping-item.selected[class*="Large"]');
+            if (selectedSize) {
+                const priceText = selectedSize.querySelector('.text-muted').textContent;
+                const price = parseInt(priceText.replace('₹', '').replace(',', ''));
+                if (!isNaN(price)) total += price;
+            }
+            
+            // Sauce price
+            const selectedSauce = document.querySelector('.topping-item.selected[class*="Tomato"], .topping-item.selected[class*="Schezwan"], .topping-item.selected[class*="Cheese"]');
+            if (selectedSauce) {
+                const priceText = selectedSauce.querySelector('.text-muted').textContent;
+                if (priceText.includes('+')) {
+                    const price = parseInt(priceText.replace('+₹', '').replace(',', ''));
+                    if (!isNaN(price)) total += price;
+                }
+            }
+            
+            // Count selected toppings
+            const selectedToppings = document.querySelectorAll('.topping-item.selected:not([class*="Personal"]):not([class*="Regular"]):not([class*="Medium"]):not([class*="Large"]):not([class*="Tomato"]):not([class*="Schezwan"]):not([class*="Cheese"])');
+            total += selectedToppings.length * 40;
+            
+            // Add delivery fee
+            total += 30;
+            
+            // Update total display
+            const totalElement = document.querySelector('.text-primary[class*="h3"]');
+            if (totalElement) {
+                totalElement.textContent = `₹${total}`;
+            }
+            
+            // Update UPI offer price (10% discount)
+            const upiOffer = total * 0.9;
+            document.querySelector('.alert-success .strong').nextSibling.textContent = ` Pay ₹${Math.round(upiOffer)} only`;
+        }
+
+        // Setup custom pizza builder
+        function setupCustomPizzaBuilder() {
+            // Topping selection
+            document.querySelectorAll('.topping-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const row = this.closest('.row');
+                    if (row.querySelector('.row')) {
+                        // This is a category row (size, sauce, toppings)
+                        const allItems = row.querySelectorAll('.topping-item');
+                        allItems.forEach(i => i.classList.remove('selected'));
+                    }
+                    this.classList.add('selected');
+                    updateCustomPizzaTotal();
+                });
+            });
+            
+            // Start over button
+            document.getElementById('start-over').addEventListener('click', function() {
+                document.querySelectorAll('.topping-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                // Reset to default selections
+                const sizeRow = document.querySelectorAll('.row')[1];
+                sizeRow.querySelector('.col-md-3:nth-child(2) .topping-item').classList.add('selected');
+                
+                const sauceRow = document.querySelectorAll('.row')[2];
+                sauceRow.querySelector('.col-md-4:nth-child(1) .topping-item').classList.add('selected');
+                
+                updateCustomPizzaTotal();
+            });
+            
+            // Add custom pizza to cart
+            document.getElementById('add-custom-pizza').addEventListener('click', function() {
+                const selectedSize = document.querySelector('.topping-item.selected[class*="Personal"], .topping-item.selected[class*="Regular"], .topping-item.selected[class*="Medium"], .topping-item.selected[class*="Large"]');
+                const selectedSauce = document.querySelector('.topping-item.selected[class*="Tomato"], .topping-item.selected[class*="Schezwan"], .topping-item.selected[class*="Cheese"]');
+                const selectedToppings = document.querySelectorAll('.topping-item.selected:not([class*="Personal"]):not([class*="Regular"]):not([class*="Medium"]):not([class*="Large"]):not([class*="Tomato"]):not([class*="Schezwan"]):not([class*="Cheese"])');
+                
+                if (!selectedSize) {
+                    alert('Please select a pizza size');
+                    return;
+                }
+                
+                const size = selectedSize.querySelector('h6').textContent;
+                const sauce = selectedSauce ? selectedSauce.querySelector('h6').textContent : 'Tomato';
+                const toppings = Array.from(selectedToppings).map(t => t.querySelector('h6').textContent);
+                
+                const pizzaData = {
+                    id: Date.now(),
+                    name: `Custom ${size} Pizza`,
+                    price: parseInt(document.querySelector('.text-primary[class*="h3"]').textContent.replace('₹', '')),
+                    sauce: sauce,
+                    toppings: toppings,
+                    isVeg: !toppings.some(t => t === 'Chicken' || t === 'Pepperoni' || t === 'Keema')
+                };
+                
+                // Add to cart
+                addToCart({
+                    id: pizzaData.id,
+                    name: pizzaData.name,
+                    price: pizzaData.price,
+                    image: 'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+                });
+                
+                alert('Custom pizza added to cart!');
+            });
+        }
+
+        // DOM Content Loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNavbar();
+            loadFooter();
+            updateCartCount();
+            loadPizzaItems();
+            setupPizzaFilters();
+            updateTimer();
+            setupCustomPizzaBuilder();
+            
+            // Maha deal button
+            document.getElementById('maha-deal-btn')?.addEventListener('click', function() {
+                const dealItem = {
+                    id: 999,
+                    name: "Maha Pizza Deal",
+                    price: 599,
+                    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                };
+                addToCart(dealItem);
+                alert('Maha Pizza Deal added to cart!');
+            });
+            
+            // Combo buttons
+            document.querySelectorAll('.btn-warning[class*="Order"]').forEach(button => {
+                button.addEventListener('click', function() {
+                    const comboCard = this.closest('.card');
+                    const comboName = comboCard.querySelector('h4').textContent;
+                    const comboPrice = parseInt(comboCard.querySelector('.indian-price').textContent.replace('₹', ''));
+                    
+                    const comboItem = {
+                        id: 1000 + Math.floor(Math.random() * 1000),
+                        name: comboName,
+                        price: comboPrice,
+                        image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                    };
+                    
+                    addToCart(comboItem);
+                    alert(`${comboName} added to cart!`);
+                });
+            });
+        });
+
+        // Setup pizza filters
+        function setupPizzaFilters() {
+            // Category tabs
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const categoryValue = this.dataset.category;
+                    const crustSelect = document.getElementById('crust-type');
+                    const crustValue = crustSelect.value;
+                    const activeSizeFilter = document.querySelector('.size-option.active');
+                    const sizeValue = activeSizeFilter ? activeSizeFilter.dataset.size : 'all';
+                    
+                    loadPizzaItems(categoryValue, crustValue, sizeValue);
+                });
+            });
+            
+            // Size options
+            document.querySelectorAll('.size-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.size-option').forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const sizeValue = this.dataset.size;
+                    const activeCategory = document.querySelector('.category-tab.active');
+                    const categoryValue = activeCategory ? activeCategory.dataset.category : 'all';
+                    const crustSelect = document.getElementById('crust-type');
+                    const crustValue = crustSelect.value;
+                    
+                    loadPizzaItems(categoryValue, crustValue, sizeValue);
+                });
+            });
+            
+            // Crust select
+            document.getElementById('crust-type')?.addEventListener('change', function() {
+                const activeCategory = document.querySelector('.category-tab.active');
+                const categoryValue = activeCategory ? activeCategory.dataset.category : 'all';
+                const activeSizeFilter = document.querySelector('.size-option.active');
+                const sizeValue = activeSizeFilter ? activeSizeFilter.dataset.size : 'all';
+                const crustValue = this.value;
+                
+                loadPizzaItems(categoryValue, crustValue, sizeValue);
+            });
+        }
+
+        // Add to cart function (from script.js)
+        function addToCart(product) {
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({...product, quantity: 1});
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            // Show Indian-style notification
+            showIndianNotification('Added to cart!', 'success');
+        }
+
+        // Show Indian-style notification
+        function showIndianNotification(message, type = 'success') {
+            const icon = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+            const color = type === 'success' ? '#138808' : '#E53E3E';
+            
+            const notification = document.createElement('div');
+            notification.className = 'alert alert-dismissible fade show position-fixed';
+            notification.style.cssText = `
+                top: 20px; right: 20px; 
+                z-index: 9999; max-width: 300px;
+                background-color: ${color}; 
+                color: white; border: none;
+                border-radius: 10px;
+            `;
+            
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="${icon} fa-lg me-3"></i>
+                    <div>
+                        <strong>${message}</strong>
+                        <p class="mb-0 small">View cart to checkout</p>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+
+        // Initialize cart (from script.js)
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    </script>
+</body>
+</html>
